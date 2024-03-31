@@ -142,6 +142,7 @@ function changeLandingOpacity() {
 	landingPage.classList.toggle('half-opacity')
 }
 function changeLandingLayout() {
+	landingPage.classList.add('new-landing-grid');
 	landingReminder.style.display = 'block';
 	screensContainer.style.display = 'none';
 	totalSecondsContainer.style.display = 'grid';
@@ -730,6 +731,4 @@ setInterval(function() {
 	}
 }, 1000);
 // Run First
-document.onload = () => {
-	getScreen(userPattern, screensContainer);
-}
+getScreen(userPattern, screensContainer);
