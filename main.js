@@ -175,7 +175,7 @@ addTimerButton.addEventListener('click', () => {
 	const prompt = generatePrompt();
 	currentPrompt = prompt;
 	insertPrompt(prompt);
-})
+});
 // Elements generators
 // function generateLandingTimer() {
 	// let outerDiv = document.createElement('div');
@@ -223,7 +223,7 @@ addTimerButton.addEventListener('click', () => {
 
 	// return outerDiv;
 // }
-function generateTimer(id, days, hours, minutes, seconds, paused) {
+function generateTimer(id, title, days, hours, minutes, seconds, paused) {
     // Create timer element
     const timer = document.createElement('div');
     timer.classList.add('timer');
@@ -231,19 +231,34 @@ function generateTimer(id, days, hours, minutes, seconds, paused) {
 	// new code
 	timer.setAttribute('onclick', 'checkClick(event, this)');
 
-    // Create days block
+    // Create title/days block
     const daysBlock = document.createElement('div');
     daysBlock.classList.add('time-block', 'days-block');
 
-    const daysTitle = document.createElement('h2');
-    daysTitle.classList.add('timer-title');
-    daysTitle.textContent = 'days';
+	const carouselContainer = document.createElement('div');
+	carouselContainer.classList.add('carousel-container', 'timer-title');
+
+	const titleContainer = document.createElement('div');
+	titleContainer.classList.add('title-container');
+	
+	const headerTitle = document.createElement('h2');
+	headerTitle.classList.add('title');
+	headerTitle.textContent = '(days) ' + title;
+
+	const headerTitleClone = document.createElement('h2');
+	headerTitleClone.classList.add('title');
+	headerTitleClone.textContent = '(days) ' + title;
+
+	titleContainer.appendChild(headerTitle);
+	titleContainer.appendChild(headerTitleClone);
+
+	carouselContainer.appendChild(titleContainer);
 
     const daysDigit = document.createElement('span');
     daysDigit.classList.add('timer-digit', 'days-digit');
     daysDigit.textContent = days;
 
-    daysBlock.appendChild(daysTitle);
+    daysBlock.appendChild(carouselContainer);
     daysBlock.appendChild(daysDigit);
 
     // Create hours block
@@ -359,7 +374,8 @@ function generateTimer(id, days, hours, minutes, seconds, paused) {
 
     return timer;
 }
-function generatePrompt(days, hours, minutes, seconds) {
+function generatePrompt(title, days, hours, minutes, seconds) {
+	title = title === undefined ? '' : title;
 	days = days === undefined ? '' : days;
 	hours = hours === undefined ? '' : hours;
 	minutes = minutes === undefined ? '' : minutes;
@@ -374,6 +390,30 @@ function generatePrompt(days, hours, minutes, seconds) {
 	inputsDiv.classList.add("inputs");
 	promptDiv.appendChild(inputsDiv);
 
+
+	// <div class="input-container title-input">
+		// <h2 class="input-title">title</h2>
+		// <input placeholder=title id=title type="text">
+	// </div>
+	// Create title input container with class "input-container title-input" and append it to the inputs container
+	let titleInputContainer = document.createElement("div");
+	titleInputContainer.classList.add("input-container", "title-input");
+	inputsDiv.appendChild(titleInputContainer);
+
+	// Create title input title with class "input-title" and text content "title" and append it to the title input container
+	let titleInputTitle = document.createElement("h2");
+	titleInputTitle.classList.add("input-title", "title-title");
+	titleInputTitle.textContent = "title";
+	titleInputContainer.appendChild(titleInputTitle);
+
+	// Create title input element with id "title", type "number", and append it to the title input container
+	let titleInput = document.createElement("input");
+	titleInput.setAttribute("placeholder", "title");
+	titleInput.setAttribute("id", "title");
+	titleInput.setAttribute("type", "text");
+	titleInput.value = title;
+	titleInputContainer.appendChild(titleInput);
+
 	// Create days input container with class "input-container days-input" and append it to the inputs container
 	let daysInputContainer = document.createElement("div");
 	daysInputContainer.classList.add("input-container", "days-input");
@@ -381,7 +421,7 @@ function generatePrompt(days, hours, minutes, seconds) {
 
 	// Create days input title with class "input-title" and text content "days" and append it to the days input container
 	let daysInputTitle = document.createElement("h2");
-	daysInputTitle.classList.add("input-title");
+	daysInputTitle.classList.add("input-title", "days-title");
 	daysInputTitle.textContent = "days";
 	daysInputContainer.appendChild(daysInputTitle);
 
@@ -520,21 +560,26 @@ function errorInputNotValid(id, limit) {
 	alert(`The Max # of ${id} is ${limit}`)
 }
 function getInputsValues(prompt) {
+	const titleInputEle = prompt.querySelector('#title');
 	const daysInputEle = prompt.querySelector('#days');
 	const hoursInputEle = prompt.querySelector('#hours');
 	const minutesInputEle = prompt.querySelector('#minutes');
 	const secondsInputEle = prompt.querySelector('#seconds');
 
+	const titleValue = titleInputEle.value;
 	const daysValue = isNaN(parseInt(daysInputEle.value)) ? 0 : parseInt(daysInputEle.value);
 	const hoursValue = isNaN(parseInt(hoursInputEle.value)) ? 0 : parseInt(hoursInputEle.value);
 	const minutesValue = isNaN(parseInt(minutesInputEle.value)) ? 0 : parseInt(minutesInputEle.value);
 	const secondsValue = isNaN(parseInt(secondsInputEle.value)) ? 0 : parseInt(secondsInputEle.value);
 
-	return [daysValue, hoursValue, minutesValue, secondsValue];
+	return [titleValue, daysValue, hoursValue, minutesValue, secondsValue];
 }
 function confirmPrompt(button) {
+	// change the total seconds in landing when the timer is edited to prevent tens overflow
+	clearScreens(tensSecondsContainer);
+
 	const prompt = button.closest('div.prompt');
-	const [days, hours, minutes, seconds] = getInputsValues(prompt);
+	const [title, days, hours, minutes, seconds] = getInputsValues(prompt);
 	let currentId = null;
 	if (updating) {
 		currentId = getTimerIndex(currentEditedTimer);
@@ -543,8 +588,8 @@ function confirmPrompt(button) {
 		timerId++;
 		currentId = timerId;
 	}
-	const timer = generateTimer(currentId, days, hours, minutes, seconds, false); // paused
-	addTimerToData(currentId, days, hours, minutes, seconds);
+	const timer = generateTimer(currentId, title, days, hours, minutes, seconds, false); // paused
+	addTimerToData(currentId, title, days, hours, minutes, seconds);
 	addTimerToBackUp(currentId, days, hours, minutes, seconds);
 	insertTimer(timer, currentPrompt);
 	deleteElement(prompt);
@@ -566,9 +611,10 @@ function rejectPrompt(button) {
 	updating = false;
 }
 // Data and BackUP
-function addTimerToData(id, days, hours, minutes, seconds) {
+function addTimerToData(id, title, days, hours, minutes, seconds) {
 	data[id] = {};
 	data[id].id = id;
+	data[id].title = title;
 	data[id].counters = [days, hours, minutes, seconds];
 	data[id].finished = false;
 	data[id].paused = false;
@@ -614,6 +660,10 @@ function restartTimer(timer) {
 	const [days, hours, minutes, seconds] = backUp[timerIndex].counters;
 	updateTimersData(timerIndex, days, hours, minutes, seconds);
 	updateTimer(timer, days, hours, minutes, seconds);
+	// to display the new changes on the landing page
+	clearScreens(tensSecondsContainer);
+	updateLandingCounters();
+	updateTotalSecondsContainer();
 }
 function pauseTimer(timer) {
 	const timerIndex = getTimerIndex(timer);
@@ -632,7 +682,7 @@ function editTimer(timer) {
 	currentEditedTimer = timer;
 	const timerIndex = getTimerIndex(timer);
 	data[timerIndex].paused = true;
-	const prompt = generatePrompt(data[timerIndex].counters[0], data[timerIndex].counters[1], data[timerIndex].counters[2], data[timerIndex].counters[3]);
+	const prompt = generatePrompt(data[timerIndex].title, data[timerIndex].counters[0], data[timerIndex].counters[1], data[timerIndex].counters[2], data[timerIndex].counters[3]);
 	currentPrompt = prompt;
 	insertPrompt(prompt, timer);
 	timer.style.display = 'none';
@@ -738,7 +788,7 @@ function timerFinished(timer) {
 // Updating loop
 setInterval(function() {
 	updateTimers();
-	if (currentLandingTimer !== null) {
+	if (currentLandingTimer !== null && data[getTimerIndex(currentLandingTimer)].paused !== true) {
 		updateLandingCounters();
 	}
 }, 1000);

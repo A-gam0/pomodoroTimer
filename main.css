@@ -235,7 +235,7 @@ section.landing {
     padding: 0.7em;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: auto;
     gap: 0.7em;
 }
 .timer > * {
@@ -256,7 +256,30 @@ section.landing {
     padding: 0.2em;
     border-bottom: 1px solid var(--brown);
     border-radius: 0 0 5px 5px;
+    text-transform: capitalize;
 }
+.carousel-contaienr {}
+.title-container {
+    width: fit-content;
+    display: grid;
+    grid-template-columns: auto auto;
+    animation: carousel 20s infinite linear;
+}
+.title {
+    width: max-content;
+    margin: 0 1em;
+    /* animation: carousel 7s infinite linear; */
+}
+@keyframes carousel {
+    from {
+        transform: translateX(0);
+    } to {
+        transform: translateX(-50%);
+    }
+}
+/* .time-block:not(.days-block) .timer-title::after {
+    content: ".";
+} */
 .timer-digit {
     display: block;
     color: var(--orange);
@@ -315,8 +338,8 @@ section.landing {
     grid-template-rows: 1fr 1fr;
     gap: 0.7em;
 }
-.prompt .input-container.days-input {
-    grid-column: auto / span 3;
+.prompt .input-container.title-input {
+    grid-column: auto / span 2;
 }
 .prompt .input-container {
     border: 1px solid var(--brown);
@@ -330,6 +353,10 @@ section.landing {
     padding: 0.2em;
     border-bottom: 1px solid var(--brown);
     border-radius: 0 0 5px 5px;
+    text-transform: capitalize;
+}
+.prompt .input-container h2:not(.days-title)::after {
+    content: ".";
 }
 .prompt .input-container input {
     color: var(--orange);
