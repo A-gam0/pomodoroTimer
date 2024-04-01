@@ -386,3 +386,12 @@ section.landing {
 .chosen-timer {
     border: 4px dashed var(--brown);
 }
+.hide-element {
+    display: none !important;
+}
+.display-block-element {
+    display: block !important;
+}
+.display-grid-element {
+    display: grid !important;
+}
