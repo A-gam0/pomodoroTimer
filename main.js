@@ -9,7 +9,7 @@ const userPattern = { // click
 	"5": [2,3,4],
 	"6": [1,3,5]
 };
-const bluePrints = [
+const digitsBluePrints = [
 { // 0
 	"1": [2,3,4],
 	"2": [1,5],
@@ -103,7 +103,7 @@ const bluePrints = [
 ];
 
 let firstChange = true;
-let currentChosenTimer = null;
+let currentChosenTimer = null; // current landing timer
 
 const landingPage = document.querySelector('.landing')
 const screensContainer = document.getElementById('screens-container');
@@ -148,9 +148,6 @@ function changeLandingLayout() {
 	totalSecondsContainer.style.display = 'grid';
 	landingTimer.style.display = 'grid';
 	landingText.style.display = 'none';
-}
-function selectTimerForLanding() {
-	// landingPage.appendChild(currentChosenTimer);
 }
 
 // pull up menu related
@@ -510,7 +507,6 @@ function selectChosentimer(timer) {
 	}
 	timer.classList.add('chosen-timer');
 	currentChosenTimer = timer.cloneNode(true);
-	selectTimerForLanding();
 }
 // Prompt
 function validateInput(inputEle, limit) {
@@ -638,21 +634,19 @@ function editTimer(timer) {
 function deleteTimer(timer) {
 	deleteElement(timer);
 	const timerIndex = getTimerIndex(timer);
-	if (timerIndex === '0' && timerId > 0) {
-		selectChosentimer(document.querySelector('#timer1'));
-	}
 	data.splice(timerIndex, 1);
 	backUp.splice(timerIndex, 1);
-	timerId--;
 	for (let i = timerIndex; i < data.length; i++) {
 		data[i].id -= 1;
 	}
-	const allTimers = document.querySelectorAll('div.timer');
-	for (let i = timerIndex; i < allTimers.length; i++) {
-		const timer = allTimers[i];
-		const timerId = getTimerIndex(timer);
-		allTimers[i].id = `timer${timerId - 1}`;
+	const allTimers = menuItems.querySelectorAll('div.timer');
+	for (let i = timerIndex; i < data.length; i++) {
+		allTimers[i].setAttribute('id', `timer${i}`);
 	}
+	if (timerIndex === '0' && timerId > 0) {
+		selectChosentimer(document.querySelector('#timer0'));
+	}
+	timerId--;
 }
 // Updating loop functions
 function updateTimers() {
@@ -710,7 +704,7 @@ function timerFinished(timer) {
 setInterval(function() {
 	updateTimers();
 	if (currentChosenTimer !== null) {
-		landingTimerId = getTimerIndex(currentChosenTimer);
+		const landingTimerId = getTimerIndex(currentChosenTimer);
 		const days = data[landingTimerId].counters[0];
 		const hours = data[landingTimerId].counters[1];
 		const minutes = data[landingTimerId].counters[2];
@@ -722,8 +716,8 @@ setInterval(function() {
 		if (secondsSplitted.length < 2) {
 			secondsSplitted = '0' + secondsSplitted;
 		}
-		getScreen(bluePrints[secondsSplitted[1]],onesSecondsContainer);
-		getScreen(bluePrints[secondsSplitted[0]],tensSecondsContainer);
+		getScreen(digitsBluePrints[secondsSplitted[1]],onesSecondsContainer);
+		getScreen(digitsBluePrints[secondsSplitted[0]],tensSecondsContainer);
 		clearScreens(onesSecondsContainer);
 		if (secondsSplitted[1] === '9') {
 			clearScreens(tensSecondsContainer);
