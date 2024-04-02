@@ -8,6 +8,7 @@
 
 # urgent improvements:
 - [ ] if you edit the only chosen task it get's unchosen when submitted again
+- [ ] scroll the pull up menu to see the prompt when it's appended at the bottom
 - [x] change 'welcome' in landing to 'you're running out of time'
 - [x] add the (.) dot after (min, sec, hr) and make the text capitalized (only first letter)
 - [ ] make a title for each timer that can be edited
