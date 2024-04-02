@@ -227,6 +227,7 @@ section.landing {
 /* COMPONENTS */
 /* full timer */
 .timer {
+    max-width: 600px;
     background: var(--rose);
     border-radius: 15px;
     overflow: hidden;
@@ -260,21 +261,26 @@ section.landing {
 }
 .carousel-contaienr {}
 .title-container {
-    width: fit-content;
-    display: grid;
-    grid-template-columns: auto auto;
-    animation: carousel 20s infinite linear;
+    width: 100%;
+    white-space: nowrap;
 }
 .title {
+    display: inline-block;
+    min-width: 100%;
     width: max-content;
-    margin: 0 1em;
-    /* animation: carousel 7s infinite linear; */
+    padding: 0 1em;
+    animation: carousel 7s infinite linear;
+
+}
+.title:first-child {
 }
 @keyframes carousel {
     from {
+        /* margin-left: 0; */
         transform: translateX(0);
     } to {
-        transform: translateX(-50%);
+        /* margin-left: -100%; */
+        transform: translateX(-100%);
     }
 }
 /* .time-block:not(.days-block) .timer-title::after {
