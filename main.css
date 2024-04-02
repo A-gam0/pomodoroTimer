@@ -80,6 +80,14 @@ body {
 	background: var(--rose);
 	padding: 1em 1em 6em 1em;
 }
+@media(min-width:700px) {
+    body {
+        padding: 2em;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3em;
+    }
+}
 /*landing section*/
 section.landing {
     display: grid;
@@ -87,6 +95,7 @@ section.landing {
     min-height: 800px;
     /* should be "auto auto 1fr auto" when the change layout is triggered */
     grid-template-rows: auto 1fr auto;
+    justify-content: center;
     align-items: center;
 }
 .styles {}
@@ -185,6 +194,20 @@ section.landing {
     border-radius: 20px 20px 0 0;
     transition: 0.7s ease-in-out;
 }
+@media(min-width:700px) {
+    .pull-up-menu {
+        background: var(--orange);
+        height: auto;
+        position: initial;
+        transform: none;
+        padding: 1.6em 1em;
+        border-radius: 20px;
+        /* transition: 0.7s ease-in-out; */
+    }
+    .pull-up-menu .arrow {
+        display: none;
+    }
+}
 .pull-up-menu .arrow {
     background: var(--orange);
     color: var(--brown);
@@ -227,7 +250,7 @@ section.landing {
 /* COMPONENTS */
 /* full timer */
 .timer {
-    max-width: 600px;
+    max-width: 650px;
     background: var(--rose);
     border-radius: 15px;
     overflow: hidden;
