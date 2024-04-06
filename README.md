@@ -11,19 +11,26 @@
 - [ ] scroll the pull up menu to see the prompt when it's appended at the bottom
 - [x] change 'welcome' in landing to 'you're running out of time'
 - [x] add the (.) dot after (min, sec, hr) and make the text capitalized (only first letter)
-- [ ] make a title for each timer that can be edited
+- [x] make a title for each timer that can be edited
+- [ ] timer's titles that have different lengths should have the same speed (not applicable since I am using `transform: translateX(-100%)`)
 - [ ] hover on title to display this little box that desciption box that has the full title
 - make a button that changes the order of the timers created (from latest => oldest or from oldest => latest)
 - making a new timer while editing another causes order problem
 - change the style when the timer is finished
 - on edit make the focus on the timer's title input field
 - save to local storage
+- [ ] you shouldn't be able to enter 60 sec/min as input but 59, same for hours
+- [ ] user can input negative numbers
+- [ ] when the chosen timer is deleted then:
+    1. if there is only one timer left, choose it
+    2. multiple timers left, null
 
 # improvements
 - choose a pattern to be greeted with everytime you login
 - drag and drop timers to rearrange
 - use date tables to choose the initial and finall date
 - make the website functional in arabic "https://rtlstyling.com/"
+- [ ] make shortcuts for fast navigation and commands
 
 # Boilerplates:
 - prompt

@@ -103,7 +103,7 @@ const digitsBluePrints = [
 ];
 
 let firstChange = true;
-let currentLandingTimer = null; // current landing timer
+let currentLandingTimer = null;
 
 const landingPage = document.querySelector('.landing')
 const screensContainer = document.getElementById('screens-container');
@@ -536,13 +536,21 @@ function updateTimer(timer, days, hours, minutes, seconds) {
 }
 function checkClick(event, timer) {
 	if (event.target.tagName !== 'BUTTON' && event.target.parentElement.tagName !== 'BUTTON') {
+		if (currentLandingTimer === null) {
+			toggleLandingLayout();
+		}
 		selectChosentimer(timer); // passed as `this`
 	}
 }
 function selectChosentimer(timer) {
+	const timerIndex = getTimerIndex(timer);
+	data[timerIndex].chosen = true;
+	clearScreens(onesSecondsContainer);
 	clearScreens(tensSecondsContainer);
 	const previouslyChosenTimer = menuItems.querySelector('.chosen-timer');
 	if (previouslyChosenTimer) {
+		const timerIndex = getTimerIndex(previouslyChosenTimer);
+		data[timerIndex].chosen = false;
 		previouslyChosenTimer.classList.remove('chosen-timer');
 	}
 	timer.classList.add('chosen-timer');
@@ -575,14 +583,19 @@ function getInputsValues(prompt) {
 	return [titleValue, daysValue, hoursValue, minutesValue, secondsValue];
 }
 function confirmPrompt(button) {
-	// change the total seconds in landing when the timer is edited to prevent tens overflow
-	clearScreens(tensSecondsContainer);
-
-	const prompt = button.closest('div.prompt');
-	const [title, days, hours, minutes, seconds] = getInputsValues(prompt);
+	// const prompt = button.closest('div.prompt');
+	const [title, days, hours, minutes, seconds] = getInputsValues(currentPrompt);
 	let currentId = null;
+	let chosen = null;
 	if (updating) {
-		currentId = getTimerIndex(currentEditedTimer);
+		// change the total seconds in landing when the timer is edited to prevent tens overflow
+		const timerIndex = getTimerIndex(currentEditedTimer);
+		currentId = timerIndex;
+		if (data[timerIndex].chosen === true) {
+			chosen = true;
+			clearScreens(onesSecondsContainer);
+			clearScreens(tensSecondsContainer);
+		}
 		deleteElement(currentEditedTimer);
 	} else {
 		timerId++;
@@ -592,7 +605,10 @@ function confirmPrompt(button) {
 	addTimerToData(currentId, title, days, hours, minutes, seconds);
 	addTimerToBackUp(currentId, days, hours, minutes, seconds);
 	insertTimer(timer, currentPrompt);
-	deleteElement(prompt);
+	deleteElement(currentPrompt);
+	if (chosen !== null) {
+		selectChosentimer(timer);
+	}
 	if (firstChange) {
 		toggleLandingLayout();
 		selectChosentimer(timer);
@@ -601,13 +617,13 @@ function confirmPrompt(button) {
 	updating = false;
 }
 function rejectPrompt(button) {
-	const prompt = button.closest('div.prompt');
+	// const prompt = button.closest('div.prompt');
 	if (updating) {
 		currentEditedTimer.style.display = 'grid'
 		const currentTimerIndex = getTimerIndex(currentEditedTimer);
 		data[currentTimerIndex].paused = false;
 	}
-	deleteElement(prompt);
+	deleteElement(currentPrompt);
 	updating = false;
 }
 // Data and BackUP
@@ -618,6 +634,7 @@ function addTimerToData(id, title, days, hours, minutes, seconds) {
 	data[id].counters = [days, hours, minutes, seconds];
 	data[id].finished = false;
 	data[id].paused = false;
+	data[id].chosen = false;
 }
 function addTimerToBackUp(id, days, hours, minutes, seconds) {
 	backUp[id] = {};
@@ -661,9 +678,11 @@ function restartTimer(timer) {
 	updateTimersData(timerIndex, days, hours, minutes, seconds);
 	updateTimer(timer, days, hours, minutes, seconds);
 	// to display the new changes on the landing page
-	clearScreens(tensSecondsContainer);
-	updateLandingCounters();
-	updateTotalSecondsContainer();
+	if (data[timerIndex].chosen === true) {
+		clearScreens(tensSecondsContainer);
+		clearScreens(onesSecondsContainer);
+		updateLandingCounters();
+	}
 }
 function pauseTimer(timer) {
 	const timerIndex = getTimerIndex(timer);
@@ -701,14 +720,16 @@ function deleteTimer(timer) {
 	for (let i = timerIndex; i < data.length; i++) {
 		allTimers[i].setAttribute('id', `timer${i}`);
 	}
+	timerId--;
 	// select chosen timer if possible
-	if (timerIndex === '0' && timerId > 0) {
-		selectChosentimer(document.querySelector('#timer0'));
-	} else if (timerIndex === '0' && timerId === 0) {
+	// I don't know why (timer === currenLandingTimer) is 'false'
+	if (timer.id === currentLandingTimer.id && timerId === 0) {
+		selectChosentimer(document.querySelector('#timer0'))
+	} else if (timer === currentLandingTimer && timerId > 0) {
+		currentLandingTimer = null;
 		firstChange = true;
 		toggleLandingLayout();
 	}
-	timerId--;
 }
 // Updating loop functions
 function updateTimers() {
@@ -737,17 +758,17 @@ function updateLandingCounters() {
 	landingTimer.querySelector('.days-digit').innerText = days;
 	landingTimer.querySelector('.hours-digit').innerText = hours;
 	landingTimer.querySelector('.minutes-digit').innerText = minutes;
-	let secondsArray = `${seconds}`.split("");
-	if (secondsArray.length < 2) {
-		secondsArray = '0' + secondsArray;
+	let secondsArr = `${seconds}`.split("");
+	if (secondsArr.length < 2) {
+		secondsArr.unshift('0');
 	}
-	updateTotalSecondsContainer(secondsArray);
+	updateTotalSecondsContainer(secondsArr);
 }
-function updateTotalSecondsContainer(secondsArray) {
-	getScreen(digitsBluePrints[secondsArray[1]],onesSecondsContainer);
-	getScreen(digitsBluePrints[secondsArray[0]],tensSecondsContainer);
+function updateTotalSecondsContainer(seconds) {
+	getScreen(digitsBluePrints[seconds[0]],tensSecondsContainer);
+	getScreen(digitsBluePrints[seconds[1]],onesSecondsContainer);
 	clearScreens(onesSecondsContainer);
-	if (secondsArray[1] === '9') {
+	if (seconds[1] === '9') {
 		clearScreens(tensSecondsContainer);
 	}
 }
@@ -794,3 +815,4 @@ setInterval(function() {
 }, 1000);
 // Run First
 getScreen(userPattern, screensContainer);
+

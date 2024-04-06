@@ -78,7 +78,7 @@ p {
 body {
 	font-family: "Rubik", sans-serif;
 	background: var(--rose);
-	padding: 1em 1em 6em 1em;
+	padding: 1em 1em 2em 1em;
 }
 @media(min-width:700px) {
     body {
@@ -92,13 +92,16 @@ body {
 }
 /*landing section*/
 section.landing {
+    align-self: flex-start;
     display: grid;
-    height: 90vh;
-    min-height: 800px;
+    /* height: 90vh; */
+    /* min-height: 800px; */
     /* should be "auto auto 1fr auto" when the change layout is triggered */
     grid-template-rows: auto 1fr auto;
     justify-content: center;
     align-items: center;
+
+    padding-bottom: 2em;
 }
 .styles {}
 .styles .h-line {
@@ -137,6 +140,7 @@ section.landing {
     transform: translateX(2px);
 }
 .screens-container {
+    margin: 2em 0;
     justify-self: center;
     width: 100%;
     max-width: 300px;
