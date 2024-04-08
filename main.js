@@ -153,7 +153,7 @@ function toggleLandingLayout() {
 let data = [];
 let backUp = []; // counters only
 
-const digitsLength = [24, 60, 60];
+const digitsLength = [23, 59, 59];
 
 let timerId = -1;
 let updating = false;
@@ -163,7 +163,7 @@ let currentEditedTimer = null;
 const pullUpMenu = document.getElementById('pull-up-menu');
 const pullUpMenuBtn = document.getElementById('pull-up-menu-btn');
 const menuItemsContainer = document.querySelector('.menu-items-container');
-const menuItems = document.querySelector('.menu-items')
+const menuItems = document.querySelector('.menu-items');
 const addTimerButton = document.querySelector('#add-timer');
 
 pullUpMenuBtn.addEventListener('click', () => {
@@ -172,9 +172,16 @@ pullUpMenuBtn.addEventListener('click', () => {
 	pullUpMenuBtn.classList.toggle('move-button');
 });
 addTimerButton.addEventListener('click', () => {
-	const prompt = generatePrompt();
-	currentPrompt = prompt;
-	insertPrompt(prompt);
+	if (!promptExists()) {
+		const prompt = generatePrompt();
+		const titleInput = prompt.querySelector('#title');
+		currentPrompt = prompt;
+		insertPrompt(prompt);
+		titleInput.focus();
+		scrollToBottom();
+	} else {
+		showError('confirm OR reject the current prompt first!');
+	}
 });
 // Elements generators
 // function generateLandingTimer() {
@@ -227,6 +234,8 @@ function generateTimer(id, title, days, hours, minutes, seconds, paused) {
     // Create timer element
     const timer = document.createElement('div');
     timer.classList.add('timer');
+    // timer.classList.add('finished-timer');
+	
     timer.setAttribute('id', `timer${id}`);
 	// new code
 	timer.setAttribute('onclick', 'checkClick(event, this)');
@@ -260,26 +269,26 @@ function generateTimer(id, title, days, hours, minutes, seconds, paused) {
 
     daysBlock.appendChild(carouselContainer);
     daysBlock.appendChild(daysDigit);
-
+	
     // Create hours block
     const hoursBlock = document.createElement('div');
     hoursBlock.classList.add('time-block');
-
+	
     const hoursTitle = document.createElement('h2');
     hoursTitle.classList.add('timer-title');
     hoursTitle.textContent = 'hr';
-
+	
     const hoursDigit = document.createElement('span');
     hoursDigit.classList.add('timer-digit', 'hours-digit');
     hoursDigit.textContent = hours;
-
+	
     hoursBlock.appendChild(hoursTitle);
     hoursBlock.appendChild(hoursDigit);
-
+	
     // Create minutes block
     const minutesBlock = document.createElement('div');
     minutesBlock.classList.add('time-block');
-
+	
     const minutesTitle = document.createElement('h2');
     minutesTitle.classList.add('timer-title');
     minutesTitle.textContent = 'min';
@@ -287,7 +296,7 @@ function generateTimer(id, title, days, hours, minutes, seconds, paused) {
     const minutesDigit = document.createElement('span');
     minutesDigit.classList.add('timer-digit', 'minutes-digit');
     minutesDigit.textContent = minutes;
-
+	
     minutesBlock.appendChild(minutesTitle);
     minutesBlock.appendChild(minutesDigit);
 
@@ -298,14 +307,14 @@ function generateTimer(id, title, days, hours, minutes, seconds, paused) {
     const secondsTitle = document.createElement('h2');
     secondsTitle.classList.add('timer-title');
     secondsTitle.textContent = 'sec';
-
+	
     const secondsDigit = document.createElement('span');
     secondsDigit.classList.add('timer-digit', 'seconds-digit');
     secondsDigit.textContent = seconds;
 
     secondsBlock.appendChild(secondsTitle);
     secondsBlock.appendChild(secondsDigit);
-
+	
     //create buttons block
     const buttons = document.createElement('div');
     buttons.classList.add('timer-buttons');
@@ -319,6 +328,8 @@ function generateTimer(id, title, days, hours, minutes, seconds, paused) {
 	// set event attributes
 	restartButton.setAttribute('onclick', "restartTimer(this.closest('div.timer'))");
 	if (paused) {
+		console.log('adding finished');
+		timer.classList.add('finished-timer');
 		pauseContinueButton.setAttribute('onclick', "continueTimer(this.closest('div.timer'))");
 	} else {
 		pauseContinueButton.setAttribute('onclick', "pauseTimer(this.closest('div.timer'))");
@@ -524,6 +535,12 @@ function generatePrompt(title, days, hours, minutes, seconds) {
 
 	return promptDiv;
 }
+function generateTitleTooltip(title) {
+	const container = document.createElement('div');
+	container.classList.add('title-tooltip');
+	container.textContent = title;
+	return container;
+}
 // Timer
 function getTimerIndex(timer) {
 	return timer.id.match(/\d+/)[0];
@@ -555,17 +572,21 @@ function selectChosentimer(timer) {
 	}
 	timer.classList.add('chosen-timer');
 	currentLandingTimer = timer.cloneNode(true);
+	updateLandingCounters();
 }
 // Prompt
+function scrollToBottom() {
+	menuItemsContainer.scrollTop = menuItemsContainer.scrollHeight;
+}
 function validateInput(inputEle, limit) {
 	value = inputEle.value;
     if (value > limit) {
-    	errorInputNotValid(inputEle.id, limit);
+    	showError('The maximum value for ' + inputEle.id + ' is ' + limit + '!');
     	inputEle.value = '';	
-    }
-}
-function errorInputNotValid(id, limit) {
-	alert(`The Max # of ${id} is ${limit}`)
+    } else if (value < 0) {
+		showError("you can't enter a value less than zero!")
+    	inputEle.value = '';	
+	}
 }
 function getInputsValues(prompt) {
 	const titleInputEle = prompt.querySelector('#title');
@@ -579,12 +600,15 @@ function getInputsValues(prompt) {
 	const hoursValue = isNaN(parseInt(hoursInputEle.value)) ? 0 : parseInt(hoursInputEle.value);
 	const minutesValue = isNaN(parseInt(minutesInputEle.value)) ? 0 : parseInt(minutesInputEle.value);
 	const secondsValue = isNaN(parseInt(secondsInputEle.value)) ? 0 : parseInt(secondsInputEle.value);
-
-	return [titleValue, daysValue, hoursValue, minutesValue, secondsValue];
+	let empty = false;
+	if (daysValue === 0 && hoursValue === 0 && minutesValue === 0 && secondsValue === 0) {
+		empty = true;
+	}
+	return [titleValue, daysValue, hoursValue, minutesValue, secondsValue, empty];
 }
 function confirmPrompt(button) {
 	// const prompt = button.closest('div.prompt');
-	const [title, days, hours, minutes, seconds] = getInputsValues(currentPrompt);
+	const [title, days, hours, minutes, seconds, empty] = getInputsValues(currentPrompt);
 	let currentId = null;
 	let chosen = null;
 	if (updating) {
@@ -596,16 +620,16 @@ function confirmPrompt(button) {
 			clearScreens(onesSecondsContainer);
 			clearScreens(tensSecondsContainer);
 		}
-		deleteElement(currentEditedTimer);
+		deleteElement(menuItems, currentEditedTimer);
 	} else {
 		timerId++;
 		currentId = timerId;
 	}
-	const timer = generateTimer(currentId, title, days, hours, minutes, seconds, false); // paused
-	addTimerToData(currentId, title, days, hours, minutes, seconds);
+	const timer = generateTimer(currentId, title, days, hours, minutes, seconds, empty); // empty or paused
+	addTimerToData(currentId, title, days, hours, minutes, seconds, empty);
 	addTimerToBackUp(currentId, days, hours, minutes, seconds);
 	insertTimer(timer, currentPrompt);
-	deleteElement(currentPrompt);
+	deleteElement(menuItems, currentPrompt);
 	if (chosen !== null) {
 		selectChosentimer(timer);
 	}
@@ -615,6 +639,28 @@ function confirmPrompt(button) {
 		firstChange = false;
 	}
 	updating = false;
+	let titleContainer = timer.querySelector('.title-container');
+	let firstTitle = timer.querySelector('.title-container .title');
+	let titles = timer.querySelectorAll('.title-container .title');
+	let appropriateDuration = 7;
+	if (firstTitle.offsetWidth > titleContainer.offsetWidth) {
+		appropriateDuration = firstTitle.offsetWidth / titleContainer.offsetWidth;
+	} 
+	for (let i = 0; i < titles.length; i++) {
+		titles[i].style.animation = `carousel ${appropriateDuration}s infinite linear`;
+	}
+	const timerTitle = timer.querySelector('.carousel-container.timer-title')
+	timerTitle.addEventListener('mouseenter', function() {
+		const tooltip = generateTitleTooltip(firstTitle.innerText);
+		timerTitle.appendChild(tooltip);
+	});
+	timerTitle.addEventListener('mouseleave', function() {
+		const tooltip = timerTitle.querySelector('.title-tooltip');
+		deleteElement(timerTitle, tooltip);
+	});
+	scrollToBottom();
+	// to check if something is being edited or created
+	currentPrompt = null;
 }
 function rejectPrompt(button) {
 	// const prompt = button.closest('div.prompt');
@@ -623,17 +669,24 @@ function rejectPrompt(button) {
 		const currentTimerIndex = getTimerIndex(currentEditedTimer);
 		data[currentTimerIndex].paused = false;
 	}
-	deleteElement(currentPrompt);
+	deleteElement(menuItems, currentPrompt);
 	updating = false;
+	currentPrompt = null;
 }
 // Data and BackUP
-function addTimerToData(id, title, days, hours, minutes, seconds) {
+function addTimerToData(id, title, days, hours, minutes, seconds, empty) {
 	data[id] = {};
 	data[id].id = id;
 	data[id].title = title;
 	data[id].counters = [days, hours, minutes, seconds];
 	data[id].finished = false;
-	data[id].paused = false;
+	if (empty) {
+		data[id].finished = true;
+		data[id].paused = true;
+	} else {
+		data[id].finished = false;
+		data[id].paused = false;
+	}
 	data[id].chosen = false;
 }
 function addTimerToBackUp(id, days, hours, minutes, seconds) {
@@ -667,8 +720,8 @@ function insertPrompt(prompt, timer=null) {
 		menuItems.insertBefore(prompt, addTimerButton);
 	}
 }
-function deleteElement(element) {
-	menuItems.removeChild(element);
+function deleteElement(parent, element) {
+	parent.removeChild(element);
 }
 // Timer's Four Buttons
 function restartTimer(timer) {
@@ -692,22 +745,30 @@ function pauseTimer(timer) {
 }
 function continueTimer(timer) {
 	const timerIndex = getTimerIndex(timer);
-	data[timerIndex].paused = false;
-	timer.querySelector('#pause-continue-button span').innerText = 'pause';
-	timer.querySelector('#pause-continue-button').setAttribute('onclick', "pauseTimer(this.closest('div.timer'))");
+	if (data[timerIndex].finished !== true) {
+		data[timerIndex].paused = false;
+		timer.querySelector('#pause-continue-button span').innerText = 'pause';
+		timer.querySelector('#pause-continue-button').setAttribute('onclick', "pauseTimer(this.closest('div.timer'))");
+	} else {
+		showError('This timer is finished! Edit or Remove it!')
+	}
 }
 function editTimer(timer) {
-	updating = true;
-	currentEditedTimer = timer;
-	const timerIndex = getTimerIndex(timer);
-	data[timerIndex].paused = true;
-	const prompt = generatePrompt(data[timerIndex].title, data[timerIndex].counters[0], data[timerIndex].counters[1], data[timerIndex].counters[2], data[timerIndex].counters[3]);
-	currentPrompt = prompt;
-	insertPrompt(prompt, timer);
-	timer.style.display = 'none';
+	if (!promptExists()) {
+		updating = true;
+		currentEditedTimer = timer;
+		const timerIndex = getTimerIndex(timer);
+		data[timerIndex].paused = true;
+		const prompt = generatePrompt(data[timerIndex].title, data[timerIndex].counters[0], data[timerIndex].counters[1], data[timerIndex].counters[2], data[timerIndex].counters[3]);
+		currentPrompt = prompt;
+		insertPrompt(prompt, timer);
+		timer.style.display = 'none';
+	} else {
+		showError('confirm OR reject the current prompt first!');
+	}
 }
 function deleteTimer(timer) {
-	deleteElement(timer);
+	deleteElement(menuItems, timer);
 	const timerIndex = getTimerIndex(timer);
 	removeTimerFromData(timerIndex);
 	removeTimerFromBackUp(timerIndex);
@@ -722,14 +783,37 @@ function deleteTimer(timer) {
 	}
 	timerId--;
 	// select chosen timer if possible
-	// I don't know why (timer === currenLandingTimer) is 'false'
-	if (timer.id === currentLandingTimer.id && timerId === 0) {
-		selectChosentimer(document.querySelector('#timer0'))
-	} else if (timer === currentLandingTimer && timerId > 0) {
-		currentLandingTimer = null;
+	// I don't know why (timer === currenLandingTimer) = 'false'
+	console.log('the timer id is:', timer.id, 'and the landing timer is:', currentLandingTimer.id);
+	console.log('timerid > currentlandingtimer', timer.id > currentLandingTimer.id);
+	if (timerId === -1) { // no timers left
 		firstChange = true;
+		currentLandingTimer = null;
 		toggleLandingLayout();
+	} else if (timer.id === currentLandingTimer.id && timerId === 0) { // delete chosen and one timer left
+		selectChosentimer(document.querySelector('#timer0'))
+	} else if (timer.id === currentLandingTimer.id && timerId > 0) { // delete chosen and there are multiple
+		currentLandingTimer = null;
+		toggleLandingLayout();
+	} else if (timer.id < currentLandingTimer.id) { // delete the unchosen one and there is one timer left (before)
+		currentLandingTimer = menuItems.querySelector(`#timer${getTimerIndex(currentLandingTimer) - 1}`)
+	} else { // delete the unchosen one and there is one timer left (after)
 	}
+}
+// errors
+function promptExists() {
+	if (currentPrompt !== null) {
+		return true;
+	}
+	return false;
+}
+const errorContainer = document.querySelector('.error-message');
+function showError(message) {
+	errorContainer.classList.remove('error-animation');
+	errorContainer.innerHTML = "<span style='color: var(--brown); font-weight: 600;'>Error: </span>"+ message;
+	setTimeout(() => {
+		errorContainer.classList.add('error-animation');
+	}, 10)
 }
 // Updating loop functions
 function updateTimers() {
@@ -780,7 +864,7 @@ function borrowTime(timer, currentDigitIndex) {
 	else if (timer.counters[biggerDigitIndex] > 0) {
 		timer.counters[biggerDigitIndex]--;
 		for (let i = biggerDigitIndex + 1; i <= digitsLength.length; i++) {
-			timer.counters[i] = digitsLength[i - 1] - 1;
+			timer.counters[i] = digitsLength[i - 1];
 		}
 	} else {
 		borrowTime(timer, biggerDigitIndex);
@@ -805,10 +889,18 @@ function redisplayAllCounters(timerId) {
 }
 function timerFinished(timer) {
 	timer.finished = true;
+	const timerEle = getTimerFromIndex(timer.id);
+	timerEle.classList.add('finished-timer');
+	pauseTimer(timerEle)
+	// timer.paused = true;
+}
+function getTimerFromIndex(index) {
+	return menuItems.querySelector(`#timer${data[index].id}`)
 }
 // Updating loop
 setInterval(function() {
 	updateTimers();
+	// finished timers are paused anyways
 	if (currentLandingTimer !== null && data[getTimerIndex(currentLandingTimer)].paused !== true) {
 		updateLandingCounters();
 	}
