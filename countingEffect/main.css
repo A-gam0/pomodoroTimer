@@ -1,0 +1,158 @@
+
+/* rules  */
+:root {
+	--border-radius: 12px;
+
+	--light-gray: #f6f5f4;
+
+	--black: #000000;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+
+    font-size: 16px;
+}
+
+@media(min-width:550px) {
+    html {
+        font-size: 17px;
+    }
+}
+
+@media(min-width:900px) {
+    html {
+        font-size: 18px;
+    }
+}
+
+body {
+    margin: 0;
+    background-color: var(--bg-clr);
+    font-family: monospace, sans-serif;
+    position: relative;
+    min-height: 100vh;
+}
+
+h1 {
+    text-transform: uppercase;
+    font-size: 2rem;
+    margin: .5em auto;   
+}
+
+h2 {
+    text-transform: uppercase;
+    margin: 0.5em auto;
+    font-size: 1.4rem;
+}
+
+h3 {
+    margin: 0.6em auto;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+input {
+    font-size: inherit;
+    font-family: inherit;
+
+}
+
+img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background-color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    padding: 0;
+}
+
+p {
+    line-height: 1.4;
+    font-size: 1.1rem;
+}
+
+/*start styling*/
+
+.big-screens-container {
+	padding: 3em;
+	display: flex;
+/*	gap: 0.05em;*/
+	width: fit-content;
+	margin: 0 auto;
+}
+
+.screens-container {
+	width: fit-content;
+	display: grid;
+	grid-template-columns: repeat(7, 20px);
+	grid-template-rows: repeat(9, 20px);
+	gap: .1em;
+}
+
+.semi-colon {
+	display: grid;
+	grid-template-rows: repeat(9, 20px);
+	grid-template-columns: 20px;
+	gap: .1em;
+
+	margin: 0 0.1em;
+}
+
+.screen {
+	border: 1px solid black;
+	border-radius: 5px;
+}
+
+.text-container {
+	padding: 1em;
+}
+
+.buttons {
+	margin: 0 auto;
+	max-width: 500px;
+	text-align: center;
+	display: flex;
+
+}
+
+.buttons > * {
+	flex: 1;
+	padding: .5em;
+	margin: .1em;
+	border: 1px solid black;
+	border-radius: 5px;
+	font-size: 1.2rem;
+
+}
+
+/*components*/
+.flip {
+	transform: rotateY(180deg);
+	transition: .7s ease-in-out;
+}
+
+.light {
+	background: lightcoral;
+}
+
+.black {
+	background: black;
+}
