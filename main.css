@@ -77,11 +77,8 @@ p {
 body {
 	font-family: "Rubik", sans-serif;
 	background: var(--rose);
-    padding: 1em 1em 2em 1em;
-
     height: 100dvh;
-    /* min-height: 800px; */
-    padding: 1em;
+    padding: 1em 1em 2em 1em;
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: calc(100% - 1em - 50px) 1fr;
