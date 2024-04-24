@@ -38,6 +38,7 @@
 - [x] add missing meta tags
 - [x] body's height should be `100dvh`
 - [ ] add my pre-built custom footer
+- [ ] the style bar is not centered
 # improvements
 - [ ] add options button
     - [ ] display all timers

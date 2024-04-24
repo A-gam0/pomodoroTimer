@@ -69,9 +69,9 @@ p {
 }
 /*start styling*/
 :root {
-    --orange: coral;
+    --orange: #ff7f50;
     --light-orange: #FFE4C4; 
-    --brown: brown;
+    --brown: #a52a2a;
     --rose: #FAEBD7;
 }
 body {
@@ -179,10 +179,8 @@ main {
 }
 @media(min-width:800px) {
     .whole-timer {
-        max-height: 700px;
         min-height: 480px;
-        height: 80vh;
-        aspect-ratio: 7 / 9;
+        aspect-ratio: 6.5 / 9;
         margin: 0 auto;
     }
 }
