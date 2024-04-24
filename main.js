@@ -869,37 +869,35 @@ function pushNotification(title, options) {
         return;
     }
 
-    // Check if permission to show notifications is granted
-    if (Notification.permission === "granted") {
-        // Create a notification
-        var notification = new Notification(title, options);
-        
-        // Play notification sound
-        var audio = new Audio('sounds/notification.wav'); // Change to the path of your notification sound
-        audio.play();
-        
-        // Vibrate if supported
-        if ("vibrate" in navigator) {
-            navigator.vibrate([200, 100, 200]); // Vibration pattern: vibrate for 200ms, pause for 100ms, then vibrate for 200ms
-        }
-    } else if (Notification.permission !== 'denied') {
-        // Ask for permission if not yet granted
-        Notification.requestPermission().then(function (permission) {
-            // If permission is granted, create the notification
-            if (permission === "granted") {
-                var notification = new Notification(title, options);
-                
-                // Play notification sound
+    // Request permission to show notifications
+    Notification.requestPermission().then(function(permission) {
+        // If permission is granted, create the notification
+        if (permission === "granted") {
+            // Create a notification
+            var notification = new Notification(title, options);
+            
+            // Play notification sound
+            try {
                 var audio = new Audio('sounds/notification.wav'); // Change to the path of your notification sound
                 audio.play();
-                
-                // Vibrate if supported
-                if ("vibrate" in navigator) {
+            } catch (error) {
+                console.error("Error playing notification sound:", error);
+            }
+            
+            // Vibrate if supported
+            if ("vibrate" in navigator) {
+                try {
                     navigator.vibrate([200, 100, 200]); // Vibration pattern: vibrate for 200ms, pause for 100ms, then vibrate for 200ms
+                } catch (error) {
+                    console.error("Error vibrating:", error);
                 }
             }
-        });
-    }
+        } else {
+            console.log("Permission for notifications was not granted");
+        }
+    }).catch(function(error) {
+        console.error("Error requesting notification permission:", error);
+    });
 }
 
 // Updating loop
@@ -917,6 +915,6 @@ getScreen(userPattern, screensContainer);
 document.querySelector('#notificationButton').addEventListener('click', () => {
     pushNotification("New Message", {
         body: "You have received a new message!",
-        icon: "path/to/notification-icon.png" // Change to the path of your notification icon
+        icon: "sounds/clock.png" // Change to the path of your notification icon
     });
 });
