@@ -912,9 +912,9 @@ setInterval(function() {
 checkElementWidth('menu-items', 500);
 getScreen(userPattern, screensContainer);
 
-document.querySelector('#notificationButton').addEventListener('click', () => {
-    pushNotification("New Message", {
-        body: "You have received a new message!",
-        icon: "sounds/clock.png" // Change to the path of your notification icon
-    });
-});
+// document.querySelector('#notificationButton').addEventListener('click', () => {
+//     pushNotification("New Message", {
+//         body: "You have received a new message!",
+//         icon: "sounds/clock.png" // Change to the path of your notification icon
+//     });
+// });
