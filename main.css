@@ -314,6 +314,7 @@ footer p {
 footer .github-anchor {
     border-radius: 5px;
     padding: .1em .3em;
+    padding-right: 0;
     animation: changing-color infinite 3s linear alternate;
 }
 @keyframes changing-color {
@@ -336,7 +337,8 @@ footer .github-anchor {
     }
 }
 footer .github-anchor i {
-    margin-left: .3em;    
+    margin-left: .3em;
+    padding-right: 0.3em;
 }
 /* COMPONENTS */
 /* menu items */
