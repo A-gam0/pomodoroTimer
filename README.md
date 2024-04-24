@@ -36,6 +36,7 @@
 - [x] the speed of the title doesn't work correctly
 - [ ] add notfications when the time is done!!
 - [ ] add missing meta tags
+- [ ] body's height should be `100dvh`
 # improvements
 - [ ] add options button
     - [ ] display all timers

@@ -913,9 +913,10 @@ setInterval(function() {
 // Run First
 checkElementWidth('menu-items', 500);
 getScreen(userPattern, screensContainer);
-document.body.addEventListener('click', () => {
-	pushNotification("New Message", {
-		body: "You have received a new message!",
-		icon: "path/to/notification-icon.png" // Change to the path of your notification icon
-	});
+
+document.querySelector('#notificationButton').addEventListener('click', () => {
+    pushNotification("New Message", {
+        body: "You have received a new message!",
+        icon: "path/to/notification-icon.png" // Change to the path of your notification icon
+    });
 });
