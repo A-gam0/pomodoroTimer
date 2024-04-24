@@ -5,7 +5,6 @@
 - [ ] Glass Morphic
 - [ ] Grainy
 - [ ] Modern 
-
 # urgent improvements:
 - [x] empty prompts keeps showing zeros => error OR empty
 - [x] if you edit the only chosen task it get's unchosen when submitted again
@@ -31,15 +30,15 @@
     - [x] change the layout (min-width:700px)
     - [x] landing timer and total second should be in the same div with a height of 100vh (good for adding an option that focuses on the landing timer)
     - [x] make the pull up menu have two columns of timers on big screens
-    - [ ] add options button
-        - [ ] display all timers
-- [ ] clicking on the same timer redisplays the landing page total seconds container
-- [ ] the error message is stretched (change body to main, and maybe the timers menu to a-side)
-- [ ] on edit the `scrolldown` function gets called after confirming the prompt
-- [ ] the speed of the title doesn't work correctly
-- [ ] the error message sticks to the top of the element not the top of the screen (if hte screen is scrolled it will not show up to the user)
-
+- [x] the error message is stretched (change body to main, and maybe the timers menu to a-side)
+- [x] the error message sticks to the top of the element not the top of the screen (if hte screen is scrolled it will not show up to the user)
+- [x] on edit the `scrolldown` function gets called after confirming the prompt
+- [x] the speed of the title doesn't work correctly
+- [ ] add notfications when the time is done!!
+- [ ] add missing meta tags
 # improvements
+- [ ] add options button
+    - [ ] display all timers
 - [ ] change the layout of the timer (ex. remove the pause button) when the timer is done
 - [ ] save to local storage
 - [ ] make a button that changes the order of the timers created (from latest => oldest or from oldest => latest)
@@ -48,7 +47,6 @@
 - use date tables to choose the initial and finall date
 - make the website functional in arabic "https://rtlstyling.com/"
 - [ ] make shortcuts for fast navigation and commands
-
 # Boilerplates:
 - prompt
 ```html
@@ -127,3 +125,5 @@
 
 ```
 - landing timer
+# Attributions:
+- notification sound effect is attributed to: Fix Bells.wav by JFRecords [[https://freesound.org/s/420507/]] License: Attribution 3.0

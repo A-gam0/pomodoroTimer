@@ -610,7 +610,7 @@ function confirmPrompt(button) {
 	let titles = timer.querySelectorAll('.title-container .title');
 	let appropriateDuration = 7;
 	if (firstTitle.offsetWidth > titleContainer.offsetWidth) {
-		appropriateDuration = firstTitle.offsetWidth / titleContainer.offsetWidth;
+		appropriateDuration = (firstTitle.offsetWidth / titleContainer.offsetWidth) * 7;
 	} 
 	for (let i = 0; i < titles.length; i++) {
 		titles[i].style.animation = `carousel ${appropriateDuration}s infinite linear`;
@@ -624,7 +624,6 @@ function confirmPrompt(button) {
 		const tooltip = timerTitle.querySelector('.title-tooltip');
 		deleteElement(timerTitle, tooltip);
 	});
-	scrollToBottom();
 	// to check if something is being edited or created
 	currentPrompt = null;
 }
@@ -863,6 +862,46 @@ function timerFinished(timer) {
 function getTimerFromIndex(index) {
 	return menuItems.querySelector(`#timer${data[index].id}`)
 }
+function pushNotification(title, options) {
+    // Check if the browser supports notifications
+    if (!("Notification" in window)) {
+        console.log("This browser does not support desktop notification");
+        return;
+    }
+
+    // Check if permission to show notifications is granted
+    if (Notification.permission === "granted") {
+        // Create a notification
+        var notification = new Notification(title, options);
+        
+        // Play notification sound
+        var audio = new Audio('sounds/notification.wav'); // Change to the path of your notification sound
+        audio.play();
+        
+        // Vibrate if supported
+        if ("vibrate" in navigator) {
+            navigator.vibrate([200, 100, 200]); // Vibration pattern: vibrate for 200ms, pause for 100ms, then vibrate for 200ms
+        }
+    } else if (Notification.permission !== 'denied') {
+        // Ask for permission if not yet granted
+        Notification.requestPermission().then(function (permission) {
+            // If permission is granted, create the notification
+            if (permission === "granted") {
+                var notification = new Notification(title, options);
+                
+                // Play notification sound
+                var audio = new Audio('sounds/notification.wav'); // Change to the path of your notification sound
+                audio.play();
+                
+                // Vibrate if supported
+                if ("vibrate" in navigator) {
+                    navigator.vibrate([200, 100, 200]); // Vibration pattern: vibrate for 200ms, pause for 100ms, then vibrate for 200ms
+                }
+            }
+        });
+    }
+}
+
 // Updating loop
 setInterval(function() {
 	updateTimers();
@@ -874,4 +913,9 @@ setInterval(function() {
 // Run First
 checkElementWidth('menu-items', 500);
 getScreen(userPattern, screensContainer);
-
+document.body.addEventListener('click', () => {
+	pushNotification("New Message", {
+		body: "You have received a new message!",
+		icon: "path/to/notification-icon.png" // Change to the path of your notification icon
+	});
+});

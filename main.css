@@ -104,6 +104,8 @@ main {
 }
 @media(min-width:800px) {
     .landing {
+        /* for the scroll bar */
+        padding: 0 0.5em;
         align-content: start;
         height: 100%;
         overflow: auto;
@@ -295,7 +297,7 @@ main {
 }
 /* error message */
 .error-message {
-    position: absolute;
+    position: fixed;
     z-index: 999;
     top: 1em;
     left: 50%;
