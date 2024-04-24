@@ -80,6 +80,7 @@ body {
     padding: 1em 1em 2em 1em;
 
     height: 100dvh;
+    /* min-height: 800px; */
     padding: 1em;
     display: grid;
     grid-template-columns: 100%;
@@ -93,6 +94,7 @@ body {
 }
 main {
     position: relative;
+    overflow: auto;
 }
 @media(min-width:800px) {
     main {
@@ -575,6 +577,7 @@ footer .github-anchor i {
     transition: .5s ease-in-out;
 }
 .screen-highlighted {
+    box-shadow: 0 4px var(--brown);
     background: var(--orange);
 }
 .move-menu {

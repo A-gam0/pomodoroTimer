@@ -37,8 +37,7 @@
 - [ ] add notfications when the time is done!!
 - [x] add missing meta tags
 - [x] body's height should be `100dvh`
-- [ ] add my pre-built custom footer
-- [ ] the style bar is not centered
+- [x] add my pre-built custom footer
 - [ ] use font awesome instead of google icons
 # improvements
 - [ ] add options button
