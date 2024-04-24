@@ -39,6 +39,7 @@
 - [x] body's height should be `100dvh`
 - [ ] add my pre-built custom footer
 - [ ] the style bar is not centered
+- [ ] use font awesome instead of google icons
 # improvements
 - [ ] add options button
     - [ ] display all timers
