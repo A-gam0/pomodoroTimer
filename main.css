@@ -1,11 +1,4 @@
-
 /* rules  */
-:root {
-    --orange: coral;
-    --light-orange: #FFE4C4; 
-    --brown: brown;
-    --rose: #FAEBD7;
-}
 *,
 *::before,
 *::after {
@@ -75,6 +68,12 @@ p {
     font-size: 1.1rem;
 }
 /*start styling*/
+:root {
+    --orange: coral;
+    --light-orange: #FFE4C4; 
+    --brown: brown;
+    --rose: #FAEBD7;
+}
 body {
 	font-family: "Rubik", sans-serif;
 	background: var(--rose);
@@ -90,7 +89,7 @@ main {
         grid-template-columns: calc(50% - 1em) 50%;
         grid-template-rows: 100%;
         align-items: start;
-        height: 100vh;
+        height: 100dvh;
         gap: 1em;
     }
     main > .pull-up-menu {

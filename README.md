@@ -35,8 +35,9 @@
 - [x] on edit the `scrolldown` function gets called after confirming the prompt
 - [x] the speed of the title doesn't work correctly
 - [ ] add notfications when the time is done!!
-- [ ] add missing meta tags
-- [ ] body's height should be `100dvh`
+- [x] add missing meta tags
+- [x] body's height should be `100dvh`
+- [ ] add my pre-built custom footer
 # improvements
 - [ ] add options button
     - [ ] display all timers
