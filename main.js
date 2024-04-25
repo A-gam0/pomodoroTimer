@@ -884,7 +884,9 @@ getScreen(userPattern, screensContainer);
 
 // add body property to option's specifying which timer is done!!
 document.querySelector('#notificationButton').addEventListener('click', () => {
-	notifyClient();
+	setTimeout(() => {
+		notifyClient();
+	}, 5000);
 });
 let notiSoundUrl = 'sounds/notification.wav';
 let notiSound = new Audio(notiSoundUrl);
