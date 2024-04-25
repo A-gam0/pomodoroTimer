@@ -906,7 +906,7 @@ checkNotificationPermission();
 function checkNotificationPermission() {
 	if (!("Notification" in window)) {
 	  alert("This browser does not support desktop notification");
-	}  else if (Notification.permission !== "denied" || Notification.permission !== "default") {
+	}  else if (Notification.permission === "denied" || Notification.permission === "default") {
 	  Notification.requestPermission().then((permission) => {
 		showError("Notification Permission: " + Notification.permission);
 	  });
