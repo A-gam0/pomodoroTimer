@@ -883,11 +883,24 @@ getScreen(userPattern, screensContainer);
 
 
 document.querySelector('#notificationButton').addEventListener('click', () => {
-    pushNotification("New Message", {
-        body: "You have received a new message!",
-        icon: "sounds/clock.png" // Change to the path of your notification icon
-    });
+	notifyClient();
+    // pushNotification("New Message", {
+    //     body: "You have received a new message!",
+    //     icon: "sounds/clock.png" // Change to the path of your notification icon
+    // });
 });
+let notiSoundUrl = 'sounds/notification.wav';
+let notiSound = new Audio(notiSoundUrl);
+function notifyClient() {
+	const title = "Timer is done!!";
+	const options = {
+		badge: "imgs/sandClock.png",
+		
+	};
+	notification = new Notification(title, {})
+	notiSound.play();
+}
+
 checkNotificationPermission();
 function checkNotificationPermission() {
 	if (!("Notification" in window)) {
@@ -897,7 +910,6 @@ function checkNotificationPermission() {
 		showError("Notification Permission: " + Notification.permission);
 	  });
 	}
-  
 	// At last, if the user has denied notifications, and you
 	// want to be respectful there is no need to bother them anymore.
 }
