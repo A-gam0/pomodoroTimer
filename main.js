@@ -882,12 +882,9 @@ getScreen(userPattern, screensContainer);
 
 
 
+// add body property to option's specifying which timer is done!!
 document.querySelector('#notificationButton').addEventListener('click', () => {
 	notifyClient();
-    // pushNotification("New Message", {
-    //     body: "You have received a new message!",
-    //     icon: "sounds/clock.png" // Change to the path of your notification icon
-    // });
 });
 let notiSoundUrl = 'sounds/notification.wav';
 let notiSound = new Audio(notiSoundUrl);
@@ -895,9 +892,13 @@ function notifyClient() {
 	const title = "Timer is done!!";
 	const options = {
 		badge: "imgs/sandClock.png",
-		
+		icon: "imgs/sandClock.png",
+		vibrate: [200, 100, 200],
+		// tag: 'unique-tag',
+		// renotify: true,
+		requireInteraction: true,
 	};
-	notification = new Notification(title, {})
+	notification = new Notification(title, options)
 	notiSound.play();
 }
 
@@ -905,7 +906,7 @@ checkNotificationPermission();
 function checkNotificationPermission() {
 	if (!("Notification" in window)) {
 	  alert("This browser does not support desktop notification");
-	}  else if (Notification.permission !== "denied") {
+	}  else if (Notification.permission !== "denied" || Notification.permission !== "default") {
 	  Notification.requestPermission().then((permission) => {
 		showError("Notification Permission: " + Notification.permission);
 	  });
