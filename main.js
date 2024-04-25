@@ -862,43 +862,7 @@ function timerFinished(timer) {
 function getTimerFromIndex(index) {
 	return menuItems.querySelector(`#timer${data[index].id}`)
 }
-function pushNotification(title, options) {
-    // Check if the browser supports notifications
-    if (!("Notification" in window)) {
-        console.log("This browser does not support desktop notification");
-        return;
-    }
 
-    // Request permission to show notifications
-    Notification.requestPermission().then(function(permission) {
-        // If permission is granted, create the notification
-        if (permission === "granted") {
-            // Create a notification
-            var notification = new Notification(title, options);
-            
-            // Play notification sound
-            try {
-                var audio = new Audio('sounds/notification.wav'); // Change to the path of your notification sound
-                audio.play();
-            } catch (error) {
-                console.error("Error playing notification sound:", error);
-            }
-            
-            // Vibrate if supported
-            if ("vibrate" in navigator) {
-                try {
-                    navigator.vibrate([200, 100, 200]); // Vibration pattern: vibrate for 200ms, pause for 100ms, then vibrate for 200ms
-                } catch (error) {
-                    console.error("Error vibrating:", error);
-                }
-            }
-        } else {
-            console.log("Permission for notifications was not granted");
-        }
-    }).catch(function(error) {
-        console.error("Error requesting notification permission:", error);
-    });
-}
 
 // Updating loop
 setInterval(function() {
@@ -912,9 +876,28 @@ setInterval(function() {
 checkElementWidth('menu-items', 500);
 getScreen(userPattern, screensContainer);
 
-// document.querySelector('#notificationButton').addEventListener('click', () => {
-//     pushNotification("New Message", {
-//         body: "You have received a new message!",
-//         icon: "sounds/clock.png" // Change to the path of your notification icon
-//     });
-// });
+
+
+
+
+
+
+document.querySelector('#notificationButton').addEventListener('click', () => {
+    pushNotification("New Message", {
+        body: "You have received a new message!",
+        icon: "sounds/clock.png" // Change to the path of your notification icon
+    });
+});
+checkNotificationPermission();
+function checkNotificationPermission() {
+	if (!("Notification" in window)) {
+	  alert("This browser does not support desktop notification");
+	}  else if (Notification.permission !== "denied") {
+	  Notification.requestPermission().then((permission) => {
+		showError("Notification Permission: " + Notification.permission);
+	  });
+	}
+  
+	// At last, if the user has denied notifications, and you
+	// want to be respectful there is no need to bother them anymore.
+}
