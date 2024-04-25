@@ -884,35 +884,38 @@ getScreen(userPattern, screensContainer);
 
 // add body property to option's specifying which timer is done!!
 document.querySelector('#notificationButton').addEventListener('click', () => {
-	setTimeout(() => {
-		notifyClient();
-	}, 5000);
+	// setTimeout(() => {
+	// 	notifyClient();
+	// }, 5000);
+	const sound = document.querySelector('audio');
+	sound.currentTime = 0;
+	sound.play();
 });
-let notiSoundUrl = 'sounds/notification.wav';
-let notiSound = new Audio(notiSoundUrl);
-function notifyClient() {
-	const title = "Timer is done!!";
-	const options = {
-		badge: "imgs/sandClock.png",
-		icon: "imgs/sandClock.png",
-		vibrate: [200, 100, 200],
-		// tag: 'unique-tag',
-		// renotify: true,
-		requireInteraction: true,
-	};
-	notification = new Notification(title, options)
-	notiSound.play();
-}
+// let notiSoundUrl = 'sounds/notification.wav';
+// let notiSound = new Audio(notiSoundUrl);
+// function notifyClient() {
+// 	const title = "Timer is done!!";
+// 	const options = {
+// 		badge: "imgs/sandClock.png",
+// 		icon: "imgs/sandClock.png",
+// 		vibrate: [200, 100, 200],
+// 		// tag: 'unique-tag',
+// 		// renotify: true,
+// 		requireInteraction: true,
+// 	};
+// 	notification = new Notification(title, options)
+// 	notiSound.play();
+// }
 
-checkNotificationPermission();
-function checkNotificationPermission() {
-	if (!("Notification" in window)) {
-	  alert("This browser does not support desktop notification");
-	}  else if (Notification.permission === "denied" || Notification.permission === "default") {
-	  Notification.requestPermission().then((permission) => {
-		showError("Notification Permission: " + Notification.permission);
-	  });
-	}
+// checkNotificationPermission();
+// function checkNotificationPermission() {
+// 	if (!("Notification" in window)) {
+// 	  alert("This browser does not support desktop notification");
+// 	}  else if (Notification.permission === "denied" || Notification.permission === "default") {
+// 	  Notification.requestPermission().then((permission) => {
+// 		showError("Notification Permission: " + Notification.permission);
+// 	  });
+// 	}
 	// At last, if the user has denied notifications, and you
 	// want to be respectful there is no need to bother them anymore.
-}
+// }
