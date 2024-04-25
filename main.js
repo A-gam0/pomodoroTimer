@@ -888,8 +888,10 @@ document.querySelector('#notificationButton').addEventListener('click', () => {
 	// 	notifyClient();
 	// }, 5000);
 	const sound = document.querySelector('audio');
-	sound.currentTime = 0;
-	sound.play();
+	setTimeout(() => {
+		sound.currentTime = 0;
+		sound.play();
+	}, 10000)
 });
 // let notiSoundUrl = 'sounds/notification.wav';
 // let notiSound = new Audio(notiSoundUrl);
