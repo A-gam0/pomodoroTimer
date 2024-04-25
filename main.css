@@ -347,8 +347,8 @@ footer .github-anchor i {
     grid-template-columns: 1fr 1fr;
     gap: .7em;
 }
-/* error message */
-.error-message {
+/* quick notification */
+.quick-notification {
     position: fixed;
     z-index: 999;
     top: 1em;
@@ -364,10 +364,14 @@ footer .github-anchor i {
     text-align: center;
     max-width: 300px;
 }
-.error-animation {
-    animation: error 2s ease-in-out;
+.notification-title {
+    color: var(--brown);
+    font-weight: 600;
 }
-@keyframes error {
+.quick-notification--animation {
+    animation: quick-notification 3s ease-in-out;
+}
+@keyframes quick-notification {
     0% {
         transform: translate(-50%, calc(-200% - 1em));
     }
@@ -378,6 +382,50 @@ footer .github-anchor i {
     } 100% {
         transform: translate(-50%, calc(-200% - 1em));
     }
+}
+.persistent-notifications-container {
+    padding: 1em;
+    position: fixed;
+    z-index: 999;
+    /* border: 1px solid; */
+    left: 1em;
+    right: 1em;
+    top: 1em;
+    bottom: 1em;
+    max-width: 500px;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5em;
+}
+.persistent-notification {
+    position: relative;
+    /* transform: translateY(200vh); */
+    background: var(--light-orange);
+    color: var(--orange);
+    padding: 1.2em;
+    border-radius: 5px;
+    border: 1px solid var(--brown);
+    font-weight: 500;
+    font-size: 1.1rem;
+    text-align: center;
+    transition: .5s ease-in-out;
+}
+.persistent-notification #delete-notification {
+    position: absolute;
+    right: 0.2em;
+    top: 0.2em;
+    width: 20px;
+    height: 20px;
+    background-color: var(--orange);
+    color: var(--brown);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4em;
 }
 /* full timer */
 .timer {

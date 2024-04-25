@@ -178,7 +178,7 @@ addTimerButton.addEventListener('click', () => {
 		titleInput.focus();
 		scrollToBottom();
 	} else {
-		showError('confirm OR reject the current prompt first!');
+		showNotification("error", 'confirm OR reject the current prompt first!');
 	}
 });
 window.addEventListener('resize', function() {
@@ -547,10 +547,10 @@ function scrollToBottom() {
 function validateInput(inputEle, limit) {
 	value = inputEle.value;
     if (value > limit) {
-    	showError('The maximum value for ' + inputEle.id + ' is ' + limit + '!');
+    	showNotification("error", 'The maximum value for ' + inputEle.id + ' is ' + limit + '!');
     	inputEle.value = '';	
     } else if (value < 0) {
-		showError("you can't enter a value less than zero!")
+		showNotification("error", "you can't enter a value less than zero!")
     	inputEle.value = '';	
 	}
 }
@@ -715,7 +715,7 @@ function continueTimer(timer) {
 		timer.querySelector('#pause-continue-button span').innerText = 'pause';
 		timer.querySelector('#pause-continue-button').setAttribute('onclick', "pauseTimer(this.closest('div.timer'))");
 	} else {
-		showError('This timer is finished! Edit or Remove it!')
+		showNotification("error", 'This timer is finished! Edit or Remove it!')
 	}
 }
 function editTimer(timer) {
@@ -729,7 +729,7 @@ function editTimer(timer) {
 		insertPrompt(prompt, timer);
 		timer.style.display = 'none';
 	} else {
-		showError('confirm OR reject the current prompt first!');
+		showNotification("error", 'confirm OR reject the current prompt first!');
 	}
 }
 function deleteTimer(timer) {
@@ -772,13 +772,23 @@ function promptExists() {
 	}
 	return false;
 }
-const errorContainer = document.querySelector('.error-message');
-function showError(message) {
-	errorContainer.classList.remove('error-animation');
-	errorContainer.innerHTML = "<span style='color: var(--brown); font-weight: 600;'>Error: </span>"+ message;
-	setTimeout(() => {
-		errorContainer.classList.add('error-animation');
-	}, 10)
+const quickNotificationElement = document.getElementById('quick-notification');
+const quickNotificationTitle = document.querySelector('#quick-notification .notification-title');
+const persistentNotificationsContainer = document.querySelector('.persistent-notifications-container');
+const persistentNotificationElement = document.getElementById('persistent-notification');
+const persistentNotificationTitle = document.getElementById('#persistent-notification .notification-title');
+// the type is either "error" or "notification"
+function showNotification(type, message) {
+	if (type === "error") {
+		console.log('generating error')
+		quickNotificationElement.innerHTML += message;
+		quickNotificationElement.classList.remove('quick-notification--animation');
+		setTimeout(() => {
+			quickNotificationElement.classList.add('quick-notification--animation');
+		}, 10)
+	} else if (type === "notification") {
+		persistentNotificationTitle.innerText += message;
+	}
 }
 // Updating loop functions
 function updateTimers() {
@@ -883,16 +893,16 @@ getScreen(userPattern, screensContainer);
 
 
 // add body property to option's specifying which timer is done!!
-document.querySelector('#notificationButton').addEventListener('click', () => {
-	// setTimeout(() => {
-	// 	notifyClient();
-	// }, 5000);
-	const sound = document.querySelector('audio');
-	setTimeout(() => {
-		sound.currentTime = 0;
-		sound.play();
-	}, 10000)
-});
+// document.querySelector('#notificationButton').addEventListener('click', () => {
+// 	// setTimeout(() => {
+// 	// 	notifyClient();
+// 	// }, 5000);
+// 	const sound = document.querySelector('audio');
+// 	setTimeout(() => {
+// 		sound.currentTime = 0;
+// 		sound.play();
+// 	}, 10000)
+// });
 // let notiSoundUrl = 'sounds/notification.wav';
 // let notiSound = new Audio(notiSoundUrl);
 // function notifyClient() {
