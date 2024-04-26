@@ -34,11 +34,12 @@
 - [x] the error message sticks to the top of the element not the top of the screen (if hte screen is scrolled it will not show up to the user)
 - [x] on edit the `scrolldown` function gets called after confirming the prompt
 - [x] the speed of the title doesn't work correctly
-- [ ] add notfications when the time is done!!
 - [x] add missing meta tags
 - [x] body's height should be `100dvh`
 - [x] add my pre-built custom footer
+- [ ] add notfications when the time is done!!
 - [ ] use font awesome instead of google icons
+- [ ] improving a lot of the JS code!
 # improvements
 - [ ] add options button
     - [ ] display all timers

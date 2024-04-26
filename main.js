@@ -774,11 +774,8 @@ function promptExists() {
 }
 const quickNotificationElement = document.getElementById('quick-notification');
 const quickNotificationTitle = document.querySelector('#quick-notification .notification-title');
-const persistentNotificationsContainer = document.querySelector('.persistent-notifications-container');
-const persistentNotificationElement = document.getElementById('persistent-notification');
-const persistentNotificationTitle = document.getElementById('#persistent-notification .notification-title');
 // the type is either "error" or "notification"
-function showNotification(type, message) {
+function showNotification(type, message, timerId=null) {
 	if (type === "error") {
 		console.log('generating error')
 		quickNotificationElement.innerHTML += message;
@@ -787,7 +784,44 @@ function showNotification(type, message) {
 			quickNotificationElement.classList.add('quick-notification--animation');
 		}, 10)
 	} else if (type === "notification") {
-		persistentNotificationTitle.innerText += message;
+		console.log('creating noti');
+		const notification = document.createElement('span');
+		notification.classList.add('persistent-notification');
+		const notificationTitle = document.createElement('span');
+		notificationTitle.classList.add('notification-title');
+		notificationTitle.innerText = "Notification: ";
+		const notificationButton = document.createElement('button');
+		notificationButton.classList.add('delete-notification');
+		notificationButton.setAttribute('onclick', "deleteNotification(this.closest('span.persistent-notification') ,this.id)");
+		notificationButton.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+		notificationButton.setAttribute('id', timerId);
+		notification.appendChild(notificationTitle);
+		notification.appendChild(notificationButton);
+		notification.innerHTML += "timer " + (parseInt(timerId) + 1) + " is done!";
+		document.body.appendChild(notification);
+		notifications.push(notification);
+		setTimeout(() => {
+			notification.style.bottom = `calc(1em + (${Object.keys(notifications).length - 1} * (2px + 3.5rem + 1em)))`
+			soundEffect.currentTime = 0;
+			soundEffect.play();
+		}, 500);
+	}
+}
+let notifications = [];
+const soundEffect = document.querySelector('audio');
+function deleteNotification(notification, timerId) {
+	deleteElement(document.body, notification);
+
+	for (let i = 0; i < notifications.length; i++) {
+		if (notification === notifications[i]) {
+			notifications.splice(i, 1);
+			for (let j = i; j < notifications.length; j++) {
+				console.log('reducing the bottom');
+				console.log(`calc(${notifications[i].style.bottom} - 2px - 3.5rem - 1em)`);
+				notifications[j].style.bottom = `calc(${notifications[j].style.bottom} - 2px - 3.5rem - 1em)`;
+			}
+			break;
+		}
 	}
 }
 // Updating loop functions
@@ -867,6 +901,7 @@ function timerFinished(timer) {
 	const timerEle = getTimerFromIndex(timer.id);
 	timerEle.classList.add('finished-timer');
 	pauseTimer(timerEle)
+	showNotification('notification', '', timer.id);
 	// timer.paused = true;
 }
 function getTimerFromIndex(index) {

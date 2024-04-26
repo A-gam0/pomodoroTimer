@@ -383,11 +383,10 @@ footer .github-anchor i {
         transform: translate(-50%, calc(-200% - 1em));
     }
 }
-.persistent-notifications-container {
+/* .persistent-notifications-container {
     padding: 1em;
     position: fixed;
     z-index: 999;
-    /* border: 1px solid; */
     left: 1em;
     right: 1em;
     top: 1em;
@@ -400,21 +399,28 @@ footer .github-anchor i {
     align-items: center;
     justify-content: flex-end;
     gap: 0.5em;
-}
+} */
 .persistent-notification {
-    position: relative;
-    /* transform: translateY(200vh); */
+    position: fixed;
+    z-index: 998;
+    left: 1em;
+    right: 1em;
+    bottom: -10em;
+    max-width: 500px;
+    margin: 0 auto;
+
+    line-height: 1;
     background: var(--light-orange);
     color: var(--orange);
     padding: 1.2em;
     border-radius: 5px;
     border: 1px solid var(--brown);
-    font-weight: 500;
+    font-weight: 400;
     font-size: 1.1rem;
     text-align: center;
     transition: .5s ease-in-out;
 }
-.persistent-notification #delete-notification {
+.delete-notification {
     position: absolute;
     right: 0.2em;
     top: 0.2em;
